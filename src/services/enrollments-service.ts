@@ -1,30 +1,26 @@
 import { Address, Enrollment } from '@prisma/client';
+import httpStatus from 'http-status';
 import { request } from '@/utils/request';
-import { invalidDataError, notFoundError, requestError } from '@/errors';
+import { invalidDataError, requestError } from '@/errors';
 import { addressRepository, CreateAddressParams, enrollmentRepository, CreateEnrollmentParams } from '@/repositories';
 import { exclude } from '@/utils/prisma-utils';
-import httpStatus from 'http-status';
 
 // TODO - Receber o CEP por parâmetro nesta função.
-async function getAddressFromCEP(cep : string) {
+async function getAddressFromCEP(cep: string) {
   // FIXME: está com CEP fixo!
-  const result : ( any | ResultApiViaCep) = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
-  
+  const result = (await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`)).data as ResultApiViaCep;
   // TODO: Tratar regras de negócio e lançar eventuais erros
-  if ( result.data.erro ) {
+  if (result.erro) {
     throw invalidDataError('CEP');
   }
-
   // FIXME: não estamos interessados em todos os campos
-
-  const cepResponse : CepResponse = {
-    logradouro: result.data.logradouro,
-    complemento: result.data.complemento,
-    bairro: result.data.bairro,
-    cidade: result.data.localidade,
-    uf: result.data.uf,
-  }
-
+  const cepResponse: CepResponse = {
+    logradouro: result.logradouro,
+    complemento: result.complemento,
+    bairro: result.bairro,
+    cidade: result.localidade,
+    uf: result.uf,
+  };
   return cepResponse;
 }
 
@@ -60,7 +56,7 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   // TODO - Verificar se o CEP é válido antes de associar ao enrollment.
 
   const result = await getAddressFromCEP(address.cep);
-  console.log(result)
+  console.log(result);
 
   const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, 'userId'));
 
@@ -75,10 +71,18 @@ function getAddressForUpsert(address: CreateAddressParams) {
 }
 
 type ResultApiViaCep = {
-  data:{
-    erro: boolean
-  }
-}
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+  ibge: string;
+  gia: string;
+  ddd: string;
+  siafi: string;
+  erro?: boolean;
+};
 
 type CepResponse = {
   logradouro: string;
@@ -86,7 +90,7 @@ type CepResponse = {
   bairro: string;
   cidade: string;
   uf: string;
-}
+};
 
 export type CreateOrUpdateEnrollmentWithAddress = CreateEnrollmentParams & {
   address: CreateAddressParams;
