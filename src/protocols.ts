@@ -30,3 +30,7 @@ export type CEP = {
 export type TicketBody = {
   ticketTypeId: number;
 }
+
+export type PaymentQuery = {
+  ticketTypeId: number;
+}
