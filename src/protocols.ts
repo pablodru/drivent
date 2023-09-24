@@ -29,11 +29,11 @@ export type CEP = {
 
 export type TicketBody = {
   ticketTypeId: number;
-}
+};
 
 export type PaymentQuery = {
   ticketTypeId: number;
-}
+};
 
 export type PaymentBody = {
   ticketId: number;
@@ -44,4 +44,4 @@ export type PaymentBody = {
     expirationDate: string;
     cvv: string;
   };
-}
+};
