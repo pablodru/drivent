@@ -15,16 +15,45 @@ async function checkEnrollmentById(enrollmentId: number):Promise<Enrollment>{
     })
 }
 
+async function postPayment(paymentData: CreatePayment) {
+    return await prisma.payment.create({
+        data: {
+            ...paymentData
+        }
+    })
+}
+
 async function getPayments(ticketId: number):Promise<Payment> {
     return await prisma.payment.findUnique({
         where: { ticketId }
     })
 }
 
+async function checkTicketAndTicketType(ticketId: number) {
+    const payment = await prisma.ticket.findUnique({
+        where:{
+            id: ticketId
+        },
+        include: {TicketType: true, Enrollment:true}
+    })
+
+    if ( payment ) {
+        await prisma.ticket.update({
+            where: {id: ticketId},
+            data: {status: "PAID"}
+        })
+    }
+    return payment;
+}
+
+export type CreatePayment = Omit<Payment, 'id' | 'createdAt' | 'updatedAt'>
+
 const paymentsRepository = {
     checkTicketById,
     checkEnrollmentById,
-    getPayments
+    getPayments,
+    checkTicketAndTicketType,
+    postPayment
 }
 
 export default paymentsRepository;

@@ -1,5 +1,6 @@
 import { invalidDataError, notFoundError, unauthorizedError } from "@/errors";
-import paymentsRepository from "@/repositories/payments-repository";
+import { PaymentBody } from "@/protocols";
+import paymentsRepository, { CreatePayment } from "@/repositories/payments-repository";
 
 async function getPayments(ticketId: number, userId: number) {
     if ( !ticketId ) throw invalidDataError('TicketId must be send on query string.');
@@ -14,8 +15,24 @@ async function getPayments(ticketId: number, userId: number) {
     return payments
 }
 
+async function postPayment(body: PaymentBody, userId: number) {
+    const ticket = await paymentsRepository.checkTicketAndTicketType(body.ticketId);
+    if ( !ticket ) throw notFoundError();
+    if ( ticket.Enrollment.userId !== userId ) throw unauthorizedError();
+
+    const paymentData = {
+        ticketId: body.ticketId,
+        value: ticket.TicketType.price,
+        cardIssuer: body.cardData.issuer,
+        cardLastDigits: body.cardData.number.toString().slice(-4),
+    } as CreatePayment
+    const paymentCreated = await paymentsRepository.postPayment(paymentData);
+    return paymentCreated
+}
+
 const paymentsService = {
-    getPayments
+    getPayments,
+    postPayment
 }
 
 export default paymentsService;

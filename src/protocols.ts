@@ -34,3 +34,14 @@ export type TicketBody = {
 export type PaymentQuery = {
   ticketTypeId: number;
 }
+
+export type PaymentBody = {
+  ticketId: number;
+  cardData: {
+    issuer: string;
+    number: string;
+    name: string;
+    expirationDate: string;
+    cvv: string;
+  };
+}
