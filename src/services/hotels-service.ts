@@ -10,9 +10,7 @@ async function getHotels(userId: number) {
   const hotels = await hotelsRepository.getHotels();
   const rooms = await hotelsRepository.getRooms();
   const hotelWithRooms = hotels.filter((hotel) => {
-    rooms.forEach((room) => {
-      if (hotel.id === room.hotelId) return true;
-    });
+    return rooms.some((room) => hotel.id === room.hotelId);
   });
 
   if (hotelWithRooms.length === 0) throw notFoundError('Hotel');
