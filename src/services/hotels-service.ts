@@ -35,7 +35,14 @@ async function getHotelById(userId: number, hotelId: number) {
   if (!existingTicket.TicketType.includesHotel) throw paymentRequired('Include Hotel');
 
   const response = await hotelsRepository.getRoomsById(hotelId);
-  return response;
+  const resultWithRenamedRooms = response.map((element) => {
+    return {
+      ...element,
+      rooms: element,
+    };
+  });
+
+  return resultWithRenamedRooms;
 }
 
 const hotelsService = { getHotels, getHotelById };
