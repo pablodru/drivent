@@ -52,9 +52,10 @@ describe('GET /hotels', () => {
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType(true, faker.datatype.boolean());
-      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
+      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
+      console.log(response.body)
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
     it("should respond with status 402 if wasn't paid", async () => {

@@ -13,11 +13,11 @@ async function getHotels(userId: number) {
     return rooms.some((room) => hotel.id === room.hotelId);
   });
 
-  if (hotelWithRooms.length === 0) throw notFoundError('Hotel');
-
   if (existingTicket.status === 'RESERVED') throw paymentRequired('Ticket');
   if (existingTicket.TicketType.isRemote) throw paymentRequired('Remote');
   if (!existingTicket.TicketType.includesHotel) throw paymentRequired('Include Hotel');
+
+  if (hotelWithRooms.length === 0) throw notFoundError('Hotel');
 
   return hotelWithRooms;
 }
