@@ -214,16 +214,41 @@ describe('GET /hotels/:hotelId', () => {
       const otherRoom = await createRoom(hotel.id);
 
       const response = await server.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
-      console.log(response.body)
+      console.log('recebi', response.body)
+      console.log('espero', {
+        id: hotel.id,
+        name: hotel.name,
+        image: hotel.image,
+        createdAt: hotel.createdAt.toISOString(),
+        updatedAt: hotel.updatedAt.toISOString(),
+        rooms: [
+          {
+            id: room.id,
+            name: room.name,
+            capacity: room.capacity,
+            hotelId: room.hotelId,
+            createdAt: room.createdAt.toISOString(),
+            updatedAt: room.updatedAt.toISOString(),
+          },
+          {
+            id: otherRoom.id,
+            name: otherRoom.name,
+            capacity: otherRoom.capacity,
+            hotelId: otherRoom.hotelId,
+            createdAt: otherRoom.createdAt.toISOString(),
+            updatedAt: otherRoom.updatedAt.toISOString(),
+          },
+        ],
+      })
       expect(response.status).toBe(httpStatus.OK);
-      expect(response.body).toEqual([
+      expect(response.body).toEqual(
         {
           id: hotel.id,
           name: hotel.name,
           image: hotel.image,
           createdAt: hotel.createdAt.toISOString(),
           updatedAt: hotel.updatedAt.toISOString(),
-          rooms: [
+          Rooms: [
             {
               id: room.id,
               name: room.name,
@@ -242,7 +267,7 @@ describe('GET /hotels/:hotelId', () => {
             },
           ],
         },
-      ]);
+      );
     });
   });
 });
