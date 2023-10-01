@@ -23,8 +23,8 @@ async function getHotelById(userId: number, hotelId: number) {
   if (!existingEnrollment) throw notFoundError('Enrollment');
   const existingTicket = await ticketsRepository.findTicketByEnrollmentId(existingEnrollment.id);
   if (!existingTicket) throw notFoundError('Ticket');
-  const hotel = await hotelsRepository.getHotelById(hotelId)
-  if (!hotel) throw notFoundError("Hotel");
+  const hotel = await hotelsRepository.getHotelById(hotelId);
+  if (!hotel) throw notFoundError('Hotel');
 
   if (existingTicket.status === 'RESERVED') throw paymentRequired('Ticket');
   if (existingTicket.TicketType.isRemote) throw paymentRequired('Remote');
