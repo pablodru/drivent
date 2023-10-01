@@ -55,7 +55,7 @@ describe('GET /hotels', () => {
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
-      console.log(response.body)
+
       expect(response.status).toBe(httpStatus.NOT_FOUND);
     });
     it("should respond with status 402 if wasn't paid", async () => {
@@ -105,7 +105,8 @@ describe('GET /hotels', () => {
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       const hotel = await createHotel();
       const room = await createRoom(hotel.id);
-      const booking = await createBooking(user, room);
+      const otherHotel = await createHotel();
+      const otherRoom = await createRoom(otherHotel.id)
 
       const response = await server.get('/hotels').set('Authorization', `Bearer ${token}`);
       expect(response.status).toBe(httpStatus.OK);
@@ -117,6 +118,13 @@ describe('GET /hotels', () => {
           createdAt: hotel.createdAt.toISOString(),
           updatedAt: hotel.updatedAt.toISOString(),
         },
+        {
+          id: otherHotel.id,
+          name: otherHotel.name,
+          image: otherHotel.image,
+          createdAt: otherHotel.createdAt.toISOString(),
+          updatedAt: otherHotel.updatedAt.toISOString(),
+        }
       ]);
     });
   });
@@ -215,32 +223,6 @@ describe('GET /hotels/:hotelId', () => {
       const otherRoom = await createRoom(hotel.id);
 
       const response = await server.get(`/hotels/${hotel.id}`).set('Authorization', `Bearer ${token}`);
-      console.log('recebi', response.body)
-      console.log('espero', {
-        id: hotel.id,
-        name: hotel.name,
-        image: hotel.image,
-        createdAt: hotel.createdAt.toISOString(),
-        updatedAt: hotel.updatedAt.toISOString(),
-        rooms: [
-          {
-            id: room.id,
-            name: room.name,
-            capacity: room.capacity,
-            hotelId: room.hotelId,
-            createdAt: room.createdAt.toISOString(),
-            updatedAt: room.updatedAt.toISOString(),
-          },
-          {
-            id: otherRoom.id,
-            name: otherRoom.name,
-            capacity: otherRoom.capacity,
-            hotelId: otherRoom.hotelId,
-            createdAt: otherRoom.createdAt.toISOString(),
-            updatedAt: otherRoom.updatedAt.toISOString(),
-          },
-        ],
-      })
       expect(response.status).toBe(httpStatus.OK);
       expect(response.body).toEqual(
         {

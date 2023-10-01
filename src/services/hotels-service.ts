@@ -8,18 +8,14 @@ async function getHotels(userId: number) {
   const existingTicket = await ticketsRepository.findTicketByEnrollmentId(existingEnrollment.id);
   if (!existingTicket) throw notFoundError('Ticket');
   const hotels = await hotelsRepository.getHotels();
-  const rooms = await hotelsRepository.getRooms();
-  const hotelWithRooms = hotels.filter((hotel) => {
-    return rooms.some((room) => hotel.id === room.hotelId);
-  });
 
   if (existingTicket.status === 'RESERVED') throw paymentRequired('Ticket');
   if (existingTicket.TicketType.isRemote) throw paymentRequired('Remote');
   if (!existingTicket.TicketType.includesHotel) throw paymentRequired('Include Hotel');
 
-  if (hotelWithRooms.length === 0) throw notFoundError('Hotel');
+  if (hotels.length === 0 || !hotels) throw notFoundError('Hotel');
 
-  return hotelWithRooms;
+  return hotels;
 }
 
 async function getHotelById(userId: number, hotelId: number) {

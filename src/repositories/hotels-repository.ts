@@ -1,19 +1,7 @@
 import { prisma } from '@/config';
 
 async function getHotels() {
-  return await prisma.hotel.findMany({
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  });
-}
-
-async function getRooms(){
-    return await prisma.room.findMany({})
+  return await prisma.hotel.findMany();
 }
 
 async function getHotelById(id: number){
@@ -29,6 +17,12 @@ async function getRoomsById(id: number) {
     })
 }
 
-const hotelsRepository = { getHotels, getRooms, getHotelById, getRoomsById };
+async function getManyHotels(id: number) {
+  return await prisma.hotel.findMany({
+    where: { id }
+  })
+}
+
+const hotelsRepository = { getHotels, getHotelById, getRoomsById, getManyHotels };
 
 export default hotelsRepository;
