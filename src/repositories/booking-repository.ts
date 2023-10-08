@@ -1,9 +1,9 @@
 import { prisma } from "@/config";
 
 async function getBooking(userId: number){
-    return prisma.booking.findUnique({
+    return await prisma.booking.findUnique({
         where: { userId },
-        include: { Room: true }
+        select: { id:true, Room: true },
     })    
 }
 
