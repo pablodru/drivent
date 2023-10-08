@@ -7,6 +7,37 @@ async function getBooking(userId: number){
     })    
 }
 
-const bookingRepository = { getBooking };
+async function checkRoomExists(roomId: number){
+    return await prisma.room.findUnique({
+        where: {id: roomId}
+    })
+}
+
+async function checkTicket(userId: number){
+    return await prisma.enrollment.findUnique({
+        where: {userId},
+        include: { Ticket: true }
+    })
+}
+
+async function checkTicketType(ticketTypeId: number){
+    return await prisma.ticketType.findUnique({
+        where: {id: ticketTypeId}
+    })
+}
+
+async function checkIsBooked(roomId: number){
+    return await prisma.booking.findFirst({
+        where:{ roomId }
+    })
+}
+
+async function postBooking(userId: number, roomId: number) {
+    return await prisma.booking.create({
+        data: { userId, roomId }
+    })
+}
+
+const bookingRepository = { getBooking, checkRoomExists, checkTicket, checkTicketType, checkIsBooked, postBooking };
 
 export default bookingRepository;
