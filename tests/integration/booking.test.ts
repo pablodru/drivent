@@ -222,8 +222,26 @@ describe('PUT /hotels', () => {
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       await createPayment(ticket.id, ticketType.price);
 
-      const response = await server.put('/booking/1').set('Authorization', `Bearer ${token}`).send({roomId: 1000});
+      const createdHotel = await createHotel();
+      const room = await createRoomWithHotelId(createdHotel.id);
+      const booking = await createBooking(room.id, user.id);
+
+      const response = await server.put(`/booking/${booking.id}}`).set('Authorization', `Bearer ${token}`).send({roomId: 1000});
       expect(response.status).toBe(httpStatus.NOT_FOUND);
+    });
+    it("should respond with status 403 if doesn't exist booking", async () => {
+      const user = await createUser();
+      const token = await generateValidToken(user);
+      const enrollment = await createEnrollmentWithAddress(user);
+      const ticketType = await createTicketType(false, true);
+      const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
+      await createPayment(ticket.id, ticketType.price);
+
+      const createdHotel = await createHotel();
+      const room = await createRoomWithHotelId(createdHotel.id);
+
+      const response = await server.put(`/booking/1000`).set('Authorization', `Bearer ${token}`).send({roomId:room.id});
+      expect(response.status).toBe(httpStatus.FORBIDDEN);
     });
     it('should respond with status 403 if is remote', async () => {
       const user = await createUser();

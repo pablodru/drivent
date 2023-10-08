@@ -24,9 +24,11 @@ async function postBooking(userId: number, roomId: number){
     return {bookingId: booking.id};
 }
 
-async function putBooking(userId: number, roomId: number){
+async function putBooking(userId: number, roomId: number, bookingId: number){
     const roomExists = await bookingRepository.checkRoomExists(roomId);
     if(!roomExists) throw notFoundError();
+    const bookingExist = await bookingRepository.checkBooking(bookingId);
+    if(!bookingExist) throw forbiddenError();
     const ticket = await bookingRepository.checkTicket(userId);
     if(!ticket) throw forbiddenError();
     const ticketType = await bookingRepository.checkTicketType(ticket.Ticket.ticketTypeId);
