@@ -14,7 +14,7 @@ async function checkRoomExists(roomId: number){
 }
 
 async function checkTicket(userId: number){
-    return await prisma.enrollment.findUnique({
+    return await prisma.enrollment.findFirst({
         where: {userId},
         include: { Ticket: true }
     })
