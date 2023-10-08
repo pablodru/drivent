@@ -17,7 +17,7 @@ async function postBooking(userId: number, roomId: number){
     const ticketType = await bookingRepository.checkTicketType(ticket.Ticket.ticketTypeId);
     if(ticketType.isRemote || !ticketType.includesHotel || ticket.Ticket.status==="RESERVED") throw forbiddenError();
     const roomIsBooked = await bookingRepository.checkIsBooked(roomId);
-    if(roomIsBooked) throw forbiddenError();
+    if(roomIsBooked && roomIsBooked.userId !== userId) throw forbiddenError();
 
     const booking = await bookingRepository.postBooking(userId, roomId);
     

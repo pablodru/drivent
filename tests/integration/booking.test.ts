@@ -19,7 +19,7 @@ beforeEach(async () => {
 
 const server = supertest(app);
 
-describe('GET /hotels', () => {
+describe('GET /booking', () => {
   it('should respond with status 401 if no token is given', async () => {
     const response = await server.get('/booking');
 
@@ -82,7 +82,7 @@ describe('GET /hotels', () => {
   });
 });
 
-describe('POST /hotels', () => {
+describe('POST /booking', () => {
   it('should respond with status 401 if no token is given', async () => {
     const response = await server.post('/booking');
 
@@ -160,6 +160,7 @@ describe('POST /hotels', () => {
     });
     it('should respond with status 403 if is booked', async () => {
       const user = await createUser();
+      const otherUser = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
       const ticketType = await createTicketType(false, true);
@@ -168,7 +169,7 @@ describe('POST /hotels', () => {
 
       const createdHotel = await createHotel();
       const room = await createRoomWithHotelId(createdHotel.id);
-      const booking = await createBooking(room.id, user.id);
+      const booking = await createBooking(room.id, otherUser.id);
 
       const response = await server.post('/booking').set('Authorization', `Bearer ${token}`).send({roomId:room.id});
       expect(response.status).toBe(httpStatus.FORBIDDEN);
@@ -191,7 +192,7 @@ describe('POST /hotels', () => {
   });
 });
 
-describe('PUT /hotels', () => {
+describe('PUT /booking', () => {
   it('should respond with status 401 if no token is given', async () => {
     const response = await server.put('/booking/1');
 
