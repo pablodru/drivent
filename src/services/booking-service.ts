@@ -13,7 +13,7 @@ async function postBooking(userId: number, roomId: number){
     const roomExists = await bookingRepository.checkRoomExists(roomId);
     if(!roomExists) throw notFoundError();
     const ticket = await bookingRepository.checkTicket(userId);
-    if(!ticket) throw forbiddenError();
+    if(!ticket || !ticket.Ticket) throw forbiddenError();
     const ticketType = await bookingRepository.checkTicketType(ticket.Ticket.ticketTypeId);
     if(ticketType.isRemote || !ticketType.includesHotel || ticket.Ticket.status==="RESERVED") throw forbiddenError();
     const roomIsBooked = await bookingRepository.checkIsBooked(roomId);
@@ -30,7 +30,7 @@ async function putBooking(userId: number, roomId: number, bookingId: number){
     const bookingExist = await bookingRepository.checkBooking(bookingId);
     if(!bookingExist) throw forbiddenError();
     const ticket = await bookingRepository.checkTicket(userId);
-    if(!ticket) throw forbiddenError();
+    if(!ticket || !ticket.Ticket) throw forbiddenError();
     const ticketType = await bookingRepository.checkTicketType(ticket.Ticket.ticketTypeId);
     if(ticketType.isRemote || !ticketType.includesHotel || ticket.Ticket.status==="RESERVED") throw forbiddenError();
     const roomIsBooked = await bookingRepository.checkIsBooked(roomId);

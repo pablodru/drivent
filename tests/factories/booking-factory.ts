@@ -79,7 +79,7 @@ export async function createCheckIsBookedResponse() {
   };
 }
 
-export function createPostBookingResponse() {
+export function createBookingResponse() {
   return {
     id: faker.datatype.number(),
     userId: faker.datatype.number(),
