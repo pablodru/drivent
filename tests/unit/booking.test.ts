@@ -18,7 +18,7 @@ beforeEach(() => {
 describe('GET /booking', () => {
   it('should return booking on GET /booking', async () => {
     const bookingResponse = await createBookingReponseWithRoom();
-    const mock = jest.spyOn(bookingRepository, 'getBooking').mockResolvedValueOnce(bookingResponse);
+    const mock = jest.spyOn(bookingRepository, 'getBooking').mockImplementationOnce(() :any => bookingResponse);
 
     const response = await bookingService.getBooking(faker.datatype.number());
     expect(mock).toBeCalledTimes(1);
@@ -39,7 +39,7 @@ describe('GET /booking', () => {
 
 describe('POST /booking', () => {
   it('should return Not Found on POST /booking', async () => {
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(null);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => null);
 
     const response = bookingService.postBooking(faker.datatype.number(), faker.datatype.number());
     expect(response).rejects.toEqual({
@@ -51,9 +51,9 @@ describe('POST /booking', () => {
     const room = createRoom();
     const checkTicketResponse = createCheckTicketResponse('RESERVED');
     const checkTicketTypeResponse = createCheckTicketTypeResponse(false, true);
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
-    jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-    jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
 
     const response = bookingService.postBooking(faker.datatype.number(), faker.datatype.number());
     expect(response).rejects.toEqual({
@@ -65,9 +65,9 @@ describe('POST /booking', () => {
     const room = createRoom();
     const checkTicketResponse = createCheckTicketResponse('PAID');
     const checkTicketTypeResponse = createCheckTicketTypeResponse(true, true);
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
-    jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-    jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
 
     const response = bookingService.postBooking(faker.datatype.number(), faker.datatype.number());
     expect(response).rejects.toEqual({
@@ -79,9 +79,9 @@ describe('POST /booking', () => {
     const room = createRoom();
     const checkTicketResponse = createCheckTicketResponse('PAID');
     const checkTicketTypeResponse = createCheckTicketTypeResponse(true, false);
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
-    jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-    jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
 
     const response = bookingService.postBooking(faker.datatype.number(), faker.datatype.number());
     expect(response).rejects.toEqual({
@@ -94,10 +94,10 @@ describe('POST /booking', () => {
     const checkTicketResponse = createCheckTicketResponse('PAID');
     const checkTicketTypeResponse = createCheckTicketTypeResponse(false, true);
     const checkIsBookedResponse = createCheckIsBookedResponse();
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
-    jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-    jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
-    jest.spyOn(bookingRepository, 'checkIsBooked').mockResolvedValue(checkIsBookedResponse);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkIsBooked').mockImplementationOnce(() :any => checkIsBookedResponse);
 
     const response = bookingService.postBooking(faker.datatype.number(), faker.datatype.number());
     expect(response).rejects.toEqual({
@@ -105,25 +105,25 @@ describe('POST /booking', () => {
       message: "It's forbidden for your ticket or the room is already booked.",
     });
   });
-  // it('should make booking on POST /booking', async () => {
-  //   const room = createRoom();
-  //   const checkTicketResponse = createCheckTicketResponse("PAID");
-  //   const checkTicketTypeResponse = createCheckTicketTypeResponse(false, true);
-  //   const postBookingResponse = createBookingResponse();
-  //   jest.spyOn(bookingRepository, "checkRoomExists").mockResolvedValueOnce(room);
-  //   jest.spyOn(bookingRepository, "checkTicket").mockResolvedValue(checkTicketResponse);
-  //   jest.spyOn(bookingRepository, "checkTicketType").mockResolvedValue(checkTicketTypeResponse);
-  //   jest.spyOn(bookingRepository, "checkIsBooked").mockResolvedValue(null);
-  //   jest.spyOn(bookingRepository, "postBooking").mockResolvedValue(postBookingResponse);
+  it('should make booking on POST /booking', async () => {
+    const room = createRoom();
+    const checkTicketResponse = createCheckTicketResponse("PAID");
+    const checkTicketTypeResponse = createCheckTicketTypeResponse(false, true);
+    const postBookingResponse = createBookingResponse();
+    jest.spyOn(bookingRepository, "checkRoomExists").mockImplementationOnce(() :any => room);
+    jest.spyOn(bookingRepository, "checkTicket").mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, "checkTicketType").mockImplementationOnce(() :any => checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, "checkIsBooked").mockImplementationOnce(() :any => null);
+    jest.spyOn(bookingRepository, "postBooking").mockImplementationOnce(() :any => postBookingResponse);
 
-  //   const response = await bookingService.postBooking(faker.datatype.number(), faker.datatype.number());
-  //   expect(response).toEqual({bookingId: postBookingResponse.id});
-  // })
+    const response = await bookingService.postBooking(faker.datatype.number(), faker.datatype.number());
+    expect(response).toEqual({bookingId: postBookingResponse.id});
+  })
 });
 
 describe('PUT /booking', () => {
   it('should return Not Found on PUT /booking', async () => {
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(null);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => null);
 
     const response = bookingService.putBooking(
       faker.datatype.number(),
@@ -160,10 +160,10 @@ describe('PUT /booking', () => {
     const checkTicketResponse = createCheckTicketResponse('PAID');
     const checkTicketTypeResponse = createCheckTicketTypeResponse(true, true);
     const checkBookingResponse = createBookingResponse();
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
     jest.spyOn(bookingRepository, 'checkBooking').mockImplementationOnce((): any => checkBookingResponse);
-    jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-    jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
 
     const response = bookingService.putBooking(
       faker.datatype.number(),
@@ -180,10 +180,10 @@ describe('PUT /booking', () => {
     const checkTicketResponse = createCheckTicketResponse('PAID');
     const checkTicketTypeResponse = createCheckTicketTypeResponse(true, false);
     const checkBookingResponse = createBookingResponse();
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
     jest.spyOn(bookingRepository, 'checkBooking').mockImplementationOnce((): any => checkBookingResponse);
-    jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-    jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
 
     const response = bookingService.putBooking(
       faker.datatype.number(),
@@ -195,38 +195,38 @@ describe('PUT /booking', () => {
       message: "It's forbidden for your ticket or the room is already booked.",
     });
   });
-  // it('should return Forbidden when the room is booked on PUT /booking', async () => {
-  //   const room = createRoom();
-  //   const checkTicketResponse = createCheckTicketResponse('PAID');
-  //   const checkTicketTypeResponse = createCheckTicketTypeResponse(false, true);
-  //   const checkBookingResponse = createBookingResponse();
-  //   jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
-  //   jest.spyOn(bookingRepository, 'checkBooking').mockImplementationOnce((): any => checkBookingResponse);
-  //   jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-  //   jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
-  //   jest.spyOn(bookingRepository, 'checkIsBooked').mockResolvedValue(createCheckIsBookedResponse());
+  it('should return Forbidden when the room is booked on PUT /booking', async () => {
+    const room = createRoom();
+    const checkTicketResponse = createCheckTicketResponse('PAID');
+    const checkTicketTypeResponse = createCheckTicketTypeResponse(false, true);
+    const checkBookingResponse = createBookingResponse();
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
+    jest.spyOn(bookingRepository, 'checkBooking').mockImplementationOnce((): any => checkBookingResponse);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkIsBooked').mockImplementationOnce(() :any => createCheckIsBookedResponse());
 
-  //   const response = bookingService.putBooking(
-  //     faker.datatype.number(),
-  //     faker.datatype.number(),
-  //     faker.datatype.number(),
-  //   );
-  //   expect(response).rejects.toEqual({
-  //     name: 'forbiddenError',
-  //     message: "It's forbidden for your ticket or the room is already booked.",
-  //   });
-  // });
+    const response = bookingService.putBooking(
+      faker.datatype.number(),
+      faker.datatype.number(),
+      faker.datatype.number(),
+    );
+    expect(response).rejects.toEqual({
+      name: 'forbiddenError',
+      message: "It's forbidden for your ticket or the room is already booked.",
+    });
+  });
   it('should make booking on PUT /booking', async () => {
     const room = createRoom();
     const checkTicketResponse = createCheckTicketResponse('PAID');
     const checkTicketTypeResponse = createCheckTicketTypeResponse(false, true);
     const putBookingResponse = createBookingResponse();
-    jest.spyOn(bookingRepository, 'checkRoomExists').mockResolvedValueOnce(room);
-    jest.spyOn(bookingRepository, 'checkTicket').mockResolvedValue(checkTicketResponse);
-    jest.spyOn(bookingRepository, 'checkTicketType').mockResolvedValue(checkTicketTypeResponse);
-    jest.spyOn(bookingRepository, 'checkIsBooked').mockResolvedValue(null);
-    jest.spyOn(bookingRepository, 'checkBooking').mockResolvedValue(createBookingResponse());
-    jest.spyOn(bookingRepository, 'putBooking').mockResolvedValue(putBookingResponse);
+    jest.spyOn(bookingRepository, 'checkRoomExists').mockImplementationOnce(() :any => room);
+    jest.spyOn(bookingRepository, 'checkTicket').mockImplementationOnce(() :any => checkTicketResponse);
+    jest.spyOn(bookingRepository, 'checkTicketType').mockImplementationOnce(() :any => checkTicketTypeResponse);
+    jest.spyOn(bookingRepository, 'checkIsBooked').mockImplementationOnce(() :any => null);
+    jest.spyOn(bookingRepository, 'checkBooking').mockImplementationOnce(() :any => createBookingResponse());
+    jest.spyOn(bookingRepository, 'putBooking').mockImplementationOnce(() :any => putBookingResponse);
 
     const response = await bookingService.putBooking(
       faker.datatype.number(),
