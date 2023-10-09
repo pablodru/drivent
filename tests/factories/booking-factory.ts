@@ -1,6 +1,6 @@
-import { prisma } from '@/config';
 import { faker } from '@faker-js/faker';
 import { Enrollment, Ticket, TicketStatus } from '@prisma/client';
+import { prisma } from '@/config';
 
 export async function createBookingReponseWithRoom() {
   return {
